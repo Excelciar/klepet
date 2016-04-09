@@ -20,6 +20,7 @@ function divElementHtmlTekst(sporocilo) {
 
 function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
+  sporocilo = youtubeCheck(sporocilo);
   sporocilo = dodajSmeske(sporocilo);
   var sistemskoSporocilo;
 
@@ -45,6 +46,15 @@ var vulgarneBesede = [];
 $.get('/swearWords.txt', function(podatki) {
   vulgarneBesede = podatki.split('\r\n');
 });
+
+function youtubeCheck(x)
+{
+   if ((/https?:\/\/www.youtube.com\/watch\?v=\w+\b/).exec(x)!= null) 
+   {
+         x = x + "<br><iframe src='" + (/https?:\/\/www.youtube.com\/watch\?v=\w+\b/).exec(x) + "&output=embed' height=150 width=200 /iframe>'";
+   }
+   return x;
+}
 
 function filtirirajVulgarneBesede(vhod) {
   for (var i in vulgarneBesede) {
