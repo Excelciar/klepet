@@ -1,16 +1,10 @@
 function divElementEnostavniTekst(sporocilo) {
   var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
-  var jeVideo = sporocilo.indexOf('https://www.youtube.com/'); //Personal reference 2: indexOf searches for "x". If it finds it it returns the place of its first character. If it doesn't it returns -1.
   var jeSlika = sporocilo.match(new RegExp('https?:\/\/.*\.(png|gif|jpg)'));
   if (jeSmesko) {
     sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } 
-  else if(jeVideo > -1)
-  {
-    
-    return $('<div style="font-weight: bold"></div>' && '<div style="margin-left:20px;">').html(sporocilo);
-  }
   else if (jeSlika)
   {
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
@@ -30,7 +24,6 @@ function divElementHtmlTekst(sporocilo) {
 
 function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
-  sporocilo = youtubeCheck(sporocilo);
   sporocilo = dodajSmeske(sporocilo);
   sporocilo = managePhotos(sporocilo);
   var sistemskoSporocilo;
@@ -56,19 +49,6 @@ var vulgarneBesede = [];
 $.get('/swearWords.txt', function(podatki) {
   vulgarneBesede = podatki.split('\r\n');
 });
-
-function youtubeCheck(x)
-{
-   if ((/https?:\/\/www.youtube.com\/watch\?v=\w+\b/).exec(x)!= null) //Personal reference 3: exec returns the match if it finds it. Otherwise returns null. Also in line 56, by replacing watch for v we don't give the youtube link anymore but a link straight to the video.
-   {
-        (/https?:\/\/www.youtube.com\/watch\?v=\w+\b/).exec(x).forEach(function(y) 
-        {
-        y = y.replace("watch?v=", "v/");  
-        x = x + "<br><iframe src='" + y + "&output=embed' width=200px height=150px allowfullscreen /iframe>'";
-     });
-   }
-   return x;
-}
 
 function filtirirajVulgarneBesede(vhod) {
   for (var i in vulgarneBesede) {
